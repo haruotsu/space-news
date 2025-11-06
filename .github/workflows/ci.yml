@@ -10,6 +10,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
     - name: Checkout code
@@ -24,7 +27,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
 
@@ -37,7 +40,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
-        file: ./coverage.out
+        file: ./backend/coverage.out
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
@@ -45,6 +48,9 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
     - name: Checkout code
@@ -60,10 +66,14 @@ jobs:
       with:
         version: latest
         args: --timeout=5m
+        working-directory: backend
 
   build:
     name: Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
     - name: Checkout code
@@ -81,4 +91,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: space-news-api
-        path: bin/api
+        path: backend/bin/api
