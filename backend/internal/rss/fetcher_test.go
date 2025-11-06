@@ -11,8 +11,8 @@ func TestFetcher_FetchArticles(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "hogepiyoのRSSを取得できる",
-			url:     "https://www.hogepiyo/rss.xml",
+			name:    "JAXAのRSSを取得できる",
+			url:     "https://www.jaxa.jp/rss/press_j.rdf",
 			wantErr: false,
 		},
 		{
@@ -25,7 +25,7 @@ func TestFetcher_FetchArticles(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			fetcher := NewFetcher()
-			articles, err := fetcher.FetchArticles(tt.url, "hogepiyo")
+			articles, err := fetcher.FetchArticles(tt.url, "JAXA")
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FetchArticles() error = %v, wantErr %v", err, tt.wantErr)
@@ -45,8 +45,8 @@ func TestFetcher_FetchArticles(t *testing.T) {
 				if article.Link == "" {
 					t.Error("FetchArticles() 記事のリンクが空です")
 				}
-				if article.Source != "hogepiyo" {
-					t.Errorf("FetchArticles() 記事のソースが hogepiyo ではありません: %s", article.Source)
+				if article.Source != "JAXA" {
+					t.Errorf("FetchArticles() 記事のソースが JAXA ではありません: %s", article.Source)
 				}
 			}
 		})
