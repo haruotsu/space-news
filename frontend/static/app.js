@@ -1,7 +1,7 @@
 // APIのベースURL (環境変数から取得、デフォルトはlocalhost)
 const API_BASE_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:8080'
-    : 'https://space-news-87js.onrender.com';
+    : 'https://api.space-news.space';
 
 // 記事を取得して表示
 async function fetchArticles() {
