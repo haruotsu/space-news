@@ -17,7 +17,8 @@ linters-settings:
   errcheck:
     check-blank: true
   govet:
-    check-shadowing: true
+    enable:
+      - shadow
 
 issues:
   exclude-rules:

@@ -57,7 +57,7 @@ func TestRepository_GetAll(t *testing.T) {
 		t.Errorf("GetAll() error = %v", err)
 	}
 
-	if len(articles) < 0 {
+	if len(articles) == 0 {
 		t.Error("GetAll() 記事が取得できませんでした")
 	}
 }

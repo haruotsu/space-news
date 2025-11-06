@@ -33,8 +33,8 @@ func main() {
 	defer db.Close()
 
 	// データベース接続確認
-	if err := db.Ping(); err != nil {
-		log.Fatalf("Failed to ping database: %v", err)
+	if pingErr := db.Ping(); pingErr != nil {
+		log.Fatalf("Failed to ping database: %v", pingErr)
 	}
 	log.Println("Database connected successfully")
 
