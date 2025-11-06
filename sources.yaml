@@ -1,0 +1,4 @@
+sources:
+  - name: JAXA
+    url: https://www.jaxa.jp/rss/press_j.rdf
+    enabled: true

@@ -1,0 +1,32 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Trigger Render deployment
+      env:
+        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      run: |
+        if [ -n "$RENDER_DEPLOY_HOOK" ]; then
+          curl -X POST "$RENDER_DEPLOY_HOOK"
+          echo "Deployment triggered successfully"
+        else
+          echo "RENDER_DEPLOY_HOOK secret not set, skipping deployment"
+        fi
+
+    - name: Notify deployment
+      if: success()
+      run: |
+        echo "Deployment to Render triggered successfully"
+        echo "Check Render dashboard for deployment status"
