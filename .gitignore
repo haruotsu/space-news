@@ -30,6 +30,9 @@ go.work.sum
 # Build output
 bin/
 
+# tagpr
+.tagpr
+
 # Editor/IDE
 # .idea/
 # .vscode/

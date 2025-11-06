@@ -1,12 +1,5 @@
-# configuration file for the tagpr in git config format
-# The tagpr generates the initial configuration, which you can customize to suit your preferences.
-[tagpr]
-  vPrefix = true
-  releaseBranch = main
-  versionFile =
-  changelog = CHANGELOG.md
-  command =
-  template =
-  release = true
-  majorLabels = []
-  minorLabels = []
+# configuration file for the tagpr
+vPrefix: true
+releaseBranch: main
+changelog: CHANGELOG.md
+release: true
