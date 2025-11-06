@@ -76,9 +76,6 @@ func main() {
 	// HTTPハンドラーのセットアップ
 	handler := article.NewHandler(repo)
 
-	http.HandleFunc("/api/articles", handler.GetArticles)
-	http.HandleFunc("/health", handler.Health)
-
 	// CORS設定
 	corsHandler := func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
