@@ -13,8 +13,34 @@ import (
 	_ "github.com/lib/pq"
 )
 
+func fetchRSSArticles(repo *article.Repository, fetcher *rss.Fetcher, cfg *config.Config) (int, error) {
+	enabledSources := cfg.GetEnabledSources()
+	log.Printf("Fetching from %d enabled sources...", len(enabledSources))
+
+	totalArticles := 0
+	for _, source := range enabledSources {
+		log.Printf("Fetching from %s: %s", source.Name, source.URL)
+		articles, err := fetcher.FetchArticles(source.URL, source.Name)
+		if err != nil {
+			log.Printf("Failed to fetch from %s: %v", source.Name, err)
+			continue
+		}
+
+		for _, a := range articles {
+			if err := repo.CreateOrUpdate(&a); err != nil {
+				log.Printf("Failed to save article: %v", err)
+			} else {
+				totalArticles++
+			}
+		}
+		log.Printf("Fetched and saved %d articles from %s", len(articles), source.Name)
+	}
+
+	log.Printf("Total articles saved: %d", totalArticles)
+	return totalArticles, nil
+}
+
 func main() {
-	// 環境変数から設定を取得
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
 		log.Fatal("DATABASE_URL environment variable is required")
@@ -48,30 +74,10 @@ func main() {
 	repo := article.NewRepository(db)
 	fetcher := rss.NewFetcher()
 
-	enabledSources := cfg.GetEnabledSources()
-	log.Printf("Fetching from %d enabled sources...", len(enabledSources))
-
-	totalArticles := 0
-	for _, source := range enabledSources {
-		log.Printf("Fetching from %s: %s", source.Name, source.URL)
-		articles, err := fetcher.FetchArticles(source.URL, source.Name)
-		if err != nil {
-			log.Printf("Failed to fetch from %s: %v", source.Name, err)
-			continue
-		}
-
-		// 記事をDBに保存
-		for _, a := range articles {
-			if err := repo.CreateOrUpdate(&a); err != nil {
-				log.Printf("Failed to save article: %v", err)
-			} else {
-				totalArticles++
-			}
-		}
-		log.Printf("Fetched and saved %d articles from %s", len(articles), source.Name)
+	_, err = fetchRSSArticles(repo, fetcher, cfg)
+	if err != nil {
+		log.Printf("Warning: Failed to fetch articles on startup: %v", err)
 	}
-
-	log.Printf("Total articles saved: %d", totalArticles)
 
 	// HTTPハンドラーのセットアップ
 	handler := article.NewHandler(repo)
@@ -110,7 +116,30 @@ func main() {
 	http.HandleFunc("/api/articles", corsHandler(handler.GetArticles))
 	http.HandleFunc("/health", corsHandler(handler.Health))
 
-	// サーバー起動
+	http.HandleFunc("/api/fetch", func(w http.ResponseWriter, r *http.Request) {
+		token := r.Header.Get("X-Fetch-Token")
+		expectedToken := os.Getenv("FETCH_TOKEN")
+
+		if expectedToken == "" || token != expectedToken {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		count, err := fetchRSSArticles(repo, fetcher, cfg)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to fetch articles: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, `{"status":"success","articles_fetched":%d}`, count)
+	})
+
 	addr := fmt.Sprintf(":%s", port)
 	log.Printf("Server starting on %s", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {

@@ -1,0 +1,31 @@
+name: Fetch RSS
+
+on:
+  schedule:
+    # 毎時0分に実行（UTC）
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    name: Fetch RSS Articles
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Fetch articles from API
+      run: |
+        response=$(curl -X POST \
+          -H "X-Fetch-Token: ${{ secrets.FETCH_TOKEN }}" \
+          -w "\nHTTP Status: %{http_code}" \
+          https://api.space-news.space/api/fetch)
+
+        echo "$response"
+
+        # HTTPステータスコードが200-299の範囲かチェック
+        status=$(echo "$response" | grep "HTTP Status:" | awk '{print $3}')
+        if [ "$status" -ge 200 ] && [ "$status" -lt 300 ]; then
+          echo "✅ RSS fetch successful"
+        else
+          echo "❌ RSS fetch failed with status $status"
+          exit 1
+        fi
