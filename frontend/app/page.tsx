@@ -1,11 +1,15 @@
 import { ArticlesList } from '@/components/ArticlesList';
 import { StarField } from '@/components/StarField';
+import { Planets } from '@/components/Planets';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-black via-70% to-teal-950 relative overflow-hidden">
       {/* Star Field with Parallax Effect */}
       <StarField />
+
+      {/* Planets */}
+      <Planets />
 
       {/* Header */}
       <header className="bg-black/30 backdrop-blur-sm border-b border-white/10 relative z-10">
