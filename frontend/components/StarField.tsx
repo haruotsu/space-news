@@ -70,7 +70,7 @@ export function StarField() {
               width: `${star.size}px`,
               height: `${star.size}px`,
               opacity: star.opacity,
-              transform: `translateY(${translateY}px)`,
+              transform: `translateY(-${translateY}px)`,
               transition: 'transform 0.1s linear',
             }}
           />
