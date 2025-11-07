@@ -3,7 +3,7 @@ import { StarField } from '@/components/StarField';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-950 via-black to-teal-950 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-black to-teal-950 relative overflow-hidden">
       {/* Star Field with Parallax Effect */}
       <StarField />
 
