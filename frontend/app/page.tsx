@@ -2,18 +2,18 @@ import { ArticlesList } from '@/components/ArticlesList';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
       {/* Header */}
-      <header className="bg-black/30 backdrop-blur-sm border-b border-blue-500/20">
+      <header className="bg-black/30 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-4 py-6 max-w-6xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center">
                 <span className="text-2xl">🚀</span>
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">Space News</h1>
-                <p className="text-sm text-blue-300">宇宙ニュース</p>
+                <p className="text-sm text-gray-400">宇宙ニュース</p>
               </div>
             </div>
           </div>
@@ -31,7 +31,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black/30 backdrop-blur-sm border-t border-blue-500/20 mt-20">
+      <footer className="bg-black/30 backdrop-blur-sm border-t border-white/10 mt-20">
         <div className="container mx-auto px-4 py-6 max-w-6xl">
           <p className="text-center text-gray-400 text-sm">
             © 2025 Space News. All rights reserved.

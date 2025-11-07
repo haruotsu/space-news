@@ -7,9 +7,7 @@ interface ArticleCardProps {
 
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <article className="group relative rounded-lg border-2 border-white/20 bg-gradient-to-br from-orange-950/80 via-black/90 to-teal-950/80 p-8 backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:shadow-2xl hover:shadow-white/10">
-      {/* Inner Border Effect - Spaceship Window Panel */}
-      <div className="absolute inset-2 border border-white/5 rounded pointer-events-none transition-colors duration-300 group-hover:border-white/10" />
+    <article className="group relative rounded-lg border border-white/20 bg-gradient-to-br from-orange-950/80 via-black/90 to-teal-950/80 p-8 backdrop-blur-sm transition-all duration-300 hover:border-white/30 hover:shadow-2xl hover:shadow-white/10">
 
       {/* Source Badge */}
       <div className="mb-4 inline-flex items-center gap-3 relative z-10">
