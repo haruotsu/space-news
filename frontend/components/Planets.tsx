@@ -29,23 +29,37 @@ export function Planets() {
   ];
 
   return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-      {planets.map((planet) => (
-        <div
-          key={planet.id}
-          className="absolute rounded-full"
-          style={{
-            width: `${planet.size}px`,
-            height: `${planet.size}px`,
-            top: planet.top,
-            left: planet.left,
-            background: planet.gradient,
-            boxShadow: `0 0 60px ${planet.shadowColor}, inset -20px -20px 60px rgba(0, 0, 0, 0.5)`,
-            transform: 'translate(-50%, -50%)',
-            filter: 'blur(1px)',
-          }}
-        />
-      ))}
-    </div>
+    <>
+      {/* SVG Filter for Noise */}
+      <svg className="absolute w-0 h-0">
+        <defs>
+          <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+            <feBlend mode="multiply" in="SourceGraphic" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        {planets.map((planet) => (
+          <div
+            key={planet.id}
+            className="absolute rounded-full"
+            style={{
+              width: `${planet.size}px`,
+              height: `${planet.size}px`,
+              top: planet.top,
+              left: planet.left,
+              background: planet.gradient,
+              boxShadow: `0 0 60px ${planet.shadowColor}, inset -20px -20px 60px rgba(0, 0, 0, 0.5)`,
+              transform: 'translate(-50%, -50%)',
+              filter: 'url(#noise) blur(0.5px)',
+              opacity: 0.8,
+            }}
+          />
+        ))}
+      </div>
+    </>
   );
 }
