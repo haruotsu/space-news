@@ -4,3 +4,5 @@
 # Environment variables
 .env.local
 .env.production.local
+.next
+node_modules
