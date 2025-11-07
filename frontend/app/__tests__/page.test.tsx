@@ -5,12 +5,12 @@ import Home from '../page';
 describe('Home', () => {
   it('ページタイトルが表示される', () => {
     render(<Home />);
-    expect(screen.getByText('宇宙ニュース')).toBeInTheDocument();
+    expect(screen.getByText('Space News')).toBeInTheDocument();
   });
 
   it('ページの説明が表示される', () => {
     render(<Home />);
-    expect(screen.getByText('宇宙開発・天文学の最新情報をお届けします')).toBeInTheDocument();
+    expect(screen.getByText('宇宙関連のニュースをまとめてお届け')).toBeInTheDocument();
   });
 
   it('ArticlesListコンポーネントが含まれている', () => {

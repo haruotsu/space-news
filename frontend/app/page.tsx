@@ -4,7 +4,7 @@ import { Planets } from '@/components/Planets';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-black via-70% to-teal-950 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-black via-black via-85% to-teal-950/30 relative overflow-hidden">
       {/* Star Field with Parallax Effect */}
       <StarField />
 
@@ -21,7 +21,9 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">Space News</h1>
-                <p className="text-sm text-gray-400">宇宙ニュース</p>
+                <p className="text-sm text-gray-400">
+                  宇宙関連のニュースをまとめてお届け
+                </p>
               </div>
             </div>
           </div>
@@ -30,11 +32,6 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 max-w-6xl relative z-10">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">最新ニュース</h2>
-          <p className="text-gray-400">宇宙開発・天文学の最新情報をお届けします</p>
-        </div>
-
         <ArticlesList />
       </main>
 
