@@ -29,7 +29,7 @@ export function Planets() {
   ];
 
   return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2 }}>
       {planets.map((planet) => (
         <div
           key={planet.id}

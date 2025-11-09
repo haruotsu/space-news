@@ -55,7 +55,7 @@ export function StarField() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: -1 }}>
+    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       {stars.map((star) => {
         const layerSpeeds = [0.1, 0.3, 0.5];
         const translateY = scrollY * layerSpeeds[star.layer];
