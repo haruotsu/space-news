@@ -1,5 +1,7 @@
 import type { Article } from '@/types/article';
 
+//API Routesの置き換える前に純粋にフロントエンドでの取得を行う実装する
+
 const getApiBaseUrl = (): string => {
   return process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
 };
