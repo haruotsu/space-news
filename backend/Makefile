@@ -1,4 +1,4 @@
-.PHONY: help build test test-verbose test-coverage run clean lint fmt deps dev docker-build docker-run
+.PHONY: help build test test-verbose test-coverage run clean lint fmt deps dev docker-build docker-run db-up db-down db-migrate db-seed db-reset local-run
 
 # デフォルトターゲット
 help:
@@ -15,6 +15,13 @@ help:
 	@echo "  make deps           - 依存パッケージをインストール"
 	@echo "  make docker-build   - Dockerイメージをビルド"
 	@echo "  make docker-run     - Dockerコンテナを起動"
+	@echo ""
+	@echo "Local Development:"
+	@echo "  make db-up          - ローカルDBを起動"
+	@echo "  make db-down        - ローカルDBを停止"
+	@echo "  make db-migrate     - マイグレーションを実行"
+	@echo "  make db-reset       - DBをリセット"
+	@echo "  make local-run      - ローカル環境でサーバーを起動"
 
 # 依存パッケージのインストール
 deps:
@@ -106,3 +113,56 @@ docker-run:
 		-e DATABASE_URL="${DATABASE_URL}" \
 		-e PORT=8080 \
 		space-news:latest
+
+# ローカルDB起動
+db-up:
+	@echo "Starting local PostgreSQL..."
+	cd .. && docker-compose up -d db
+	@echo "Waiting for database to be ready..."
+	@sleep 3
+	@echo "Database is ready!"
+
+# ローカルDB停止
+db-down:
+	@echo "Stopping local PostgreSQL..."
+	cd .. && docker-compose down
+	@echo "Database stopped"
+
+# マイグレーション実行
+db-migrate:
+	@echo "Running migrations..."
+	@if [ ! -f .env ]; then \
+		echo "Error: .env file not found. Copy .env.example to .env first."; \
+		exit 1; \
+	fi
+	docker exec space-news-db psql -U postgres -d spacenews -f /docker-entrypoint-initdb.d/001_initial.sql || \
+	docker exec -i space-news-db psql -U postgres -d spacenews < migrations/001_initial.sql
+	@echo "Migration complete"
+
+# シードデータ投入
+db-seed:
+	@echo "Seeding database..."
+	@if [ ! -f .env ]; then \
+		echo "Error: .env file not found. Copy .env.example to .env first."; \
+		exit 1; \
+	fi
+	docker exec -i space-news-db psql -U postgres -d spacenews < migrations/002_seed.sql
+	@echo "Seed data inserted"
+
+# DBリセット
+db-reset:
+	@echo "Resetting database..."
+	cd .. && docker-compose down -v
+	cd .. && docker-compose up -d db
+	@sleep 3
+	$(MAKE) db-migrate
+	@echo "Database reset complete"
+
+# ローカル環境でサーバー起動
+local-run: build
+	@echo "Starting server with local database..."
+	@if [ ! -f .env ]; then \
+		echo "Error: .env file not found. Copy .env.example to .env first."; \
+		exit 1; \
+	fi
+	@export $$(cat .env | grep -v '^#' | xargs) && ./bin/api
