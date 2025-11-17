@@ -1,19 +1,10 @@
-# Space News
+# Space News - Backend API
 
-宇宙関連のニュースを集約するWebサービス
+Go言語で実装されたバックエンドAPI
 
-## 概要
+## 開発
 
-RSSフィードから宇宙関連の記事を取得し、配信します。
-
-## ローカル開発環境のセットアップ
-
-### 前提条件
-- Go 1.21以上
-- Docker & Docker Compose
-- Python 3 または Node.js (フロントエンド用HTTPサーバー)
-
-### バックエンドのセットアップ
+### ローカル開発環境のセットアップ
 
 ```bash
 cd backend
@@ -38,57 +29,43 @@ make db-seed
 make local-run
 ```
 
-サーバーは http://localhost:8080 で起動します。
-
-### フロントエンドのセットアップ
-
-```bash
-cd frontend
-
-# 方法1: Pythonの簡易HTTPサーバーを使用
-python3 -m http.server 3000
-
-# 方法2: npx serveを使用
-npx serve . -p 3000
-```
-
-フロントエンドは http://localhost:3000 で起動します。
-
-**注意**: ローカル開発時は `static/app.js` の `API_BASE_URL` を `http://localhost:8080` に変更してください。
-
-## 開発コマンド
-
-### バックエンド
+### 本番環境のセットアップ
 
 ```bash
 cd backend
 
-# ビルド・テスト
+# 依存パッケージのインストール
+make deps
+
+# 環境変数の設定
+export DATABASE_URL="postgresql://[supabase-connection-string]"
+export PORT=8080
+
+# サーバー起動
+make run
+```
+
+### 開発コマンド
+
+#### ビルド・テスト
+```bash
+make help           # 利用可能なコマンドを表示
 make build          # ビルド
 make test           # テスト実行
 make test-coverage  # カバレッジ付きテスト
+make dev            # 開発モード (ホットリロード)
 make lint           # 静的解析
 make fmt            # コードフォーマット
+```
 
-# ローカルDB管理
+#### ローカルDB管理
+```bash
 make db-up          # ローカルDBを起動
 make db-down        # ローカルDBを停止
 make db-migrate     # マイグレーションを実行
 make db-seed        # モックデータを投入
 make db-reset       # DBをリセット(全データ削除)
 make local-run      # ローカル環境でサーバーを起動
-```
-
-### フロントエンド
-
-```bash
-cd frontend
-
-# 開発サーバー起動
-python3 -m http.server 3000
-
-# または
-npx serve . -p 3000
 ```
 
 ## API エンドポイント
@@ -102,7 +79,3 @@ GET /api/articles?limit=20&offset=0
 ```
 GET /health
 ```
-
-## ライセンス
-
-MIT
