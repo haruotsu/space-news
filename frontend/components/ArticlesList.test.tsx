@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ArticlesList } from './ArticlesList';
 import { fetchArticles } from '@/lib/api';
 import type { Article } from '@/types/article';
@@ -9,7 +9,14 @@ vi.mock('@/lib/api', () => ({
   fetchArticles: vi.fn(),
 }));
 
-describe('ArticlesList', () => {
+/**
+ * ArticlesListのテスト（Server Component）
+ *
+ * ArticlesListはServer Componentとして実装されており、
+ * 非同期でデータを取得します。Server Componentsのテストでは、
+ * コンポーネントを await で呼び出す必要があります。
+ */
+describe('ArticlesList (Server Component)', () => {
   const mockArticles: Article[] = [
     {
       source: 'NASA',
@@ -31,44 +38,28 @@ describe('ArticlesList', () => {
     vi.clearAllMocks();
   });
 
-  it('ローディング状態が表示される', () => {
-    vi.mocked(fetchArticles).mockImplementation(
-      () => new Promise(() => {}) // 永続的にpending状態
-    );
-
-    render(<ArticlesList />);
-
-    expect(screen.getByText('読み込み中...')).toBeInTheDocument();
-  });
-
   it('記事が正常に表示される', async () => {
     vi.mocked(fetchArticles).mockResolvedValue(mockArticles);
 
-    render(<ArticlesList />);
+    render(await ArticlesList());
 
-    await waitFor(() => {
-      expect(screen.getByText('Test Article 1')).toBeInTheDocument();
-      expect(screen.getByText('Test Article 2')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Test Article 1')).toBeInTheDocument();
+    expect(screen.getByText('Test Article 2')).toBeInTheDocument();
   });
 
   it('記事がない場合はメッセージが表示される', async () => {
     vi.mocked(fetchArticles).mockResolvedValue([]);
 
-    render(<ArticlesList />);
+    render(await ArticlesList());
 
-    await waitFor(() => {
-      expect(screen.getByText('記事がまだありません')).toBeInTheDocument();
-    });
+    expect(screen.getByText('記事がまだありません')).toBeInTheDocument();
   });
 
   it('エラーが発生した場合はエラーメッセージが表示される', async () => {
     vi.mocked(fetchArticles).mockRejectedValue(new Error('API Error'));
 
-    render(<ArticlesList />);
+    render(await ArticlesList());
 
-    await waitFor(() => {
-      expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
-    });
+    expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
   });
 });
