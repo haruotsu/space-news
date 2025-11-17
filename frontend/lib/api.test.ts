@@ -41,7 +41,7 @@ describe('fetchArticles', () => {
 
     expect(result).toEqual(mockArticles);
     expect(mockFetch).toHaveBeenCalledTimes(1);
-    expect(mockFetch).toHaveBeenCalledWith('https://api.space-news.space/api/articles?limit=50');
+    expect(mockFetch).toHaveBeenCalledWith('http://localhost:8080/api/articles?limit=50');
   });
 
   it('APIエラー時にエラーをthrowする', async () => {
