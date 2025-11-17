@@ -3,6 +3,6 @@ sources:
     url: https://www.jaxa.jp/rss/press_j.rdf
     enabled: true
 sources:
-  - name: JAXA
+  - name: sorae
     url: https://sorae.info/rss
     enabled: true
