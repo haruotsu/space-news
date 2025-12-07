@@ -36,3 +36,4 @@ bin/
 # Editor/IDE
 # .idea/
 # .vscode/
+frontend/next-env.d.ts

@@ -1,50 +1,27 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { ArticleCard } from './ArticleCard';
 import { fetchArticles } from '@/lib/api';
 import type { Article } from '@/types/article';
 
-export function ArticlesList() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+/**
+ * 記事一覧を表示するServer Component
+ * useEffectを使わず、サーバーサイドでデータを取得する
+ */
+export async function ArticlesList() {
+  let articles: Article[] = [];
+  let errorMessage: string | null = null;
 
-  useEffect(() => {
-    async function loadArticles() {
-      try {
-        setLoading(true);
-        const data = await fetchArticles();
-        setArticles(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadArticles();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center w-full min-h-[400px]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-          <p className="text-white text-lg">読み込み中...</p>
-        </div>
-      </div>
-    );
+  try {
+    articles = await fetchArticles();
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : 'Unknown error';
   }
 
-  if (error) {
+  if (errorMessage) {
     return (
       <div className="flex items-center justify-center w-full min-h-[400px]">
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-6 text-center">
-          <p className="text-red-400 text-lg">
-            ⚠️ エラーが発生しました
-          </p>
-          <p className="mt-2 text-red-300 text-sm">{error}</p>
+          <p className="text-red-400 text-lg">⚠️ エラーが発生しました</p>
+          <p className="mt-2 text-red-300 text-sm">{errorMessage}</p>
         </div>
       </div>
     );
